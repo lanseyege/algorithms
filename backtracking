@@ -1,0 +1,50 @@
+backtraing，中文称为回溯法，枚举多维度数值的方法。依据巡回依序穷举各个维度的数值，制作所有可能的多维度数值，并且
+在巡回途中避免枚举出不正确的多维度数值。
+
+backtrack( [v1, ...., vn]){ // [v1,...,vn]是多维度数据
+  //检验数组正不正确
+  if ([v1,...,vn] is well-generated ){
+    if ([v1,...vn] is a solution ) process solution;
+    return;
+  }
+  //穷举这个维度的所有数值，并巡回到下一个维度
+  for (x = possible values of n+1)
+    backtrack( [v1,...,vn, x]);
+}
+call backtrack([]); // 从第一个维度开始依序枚举
+
+编写方程时，可以使用数组存储多维数据
+
+int solution[MAX_DIMENSION];
+void backtrack(int dimension){
+  //制作了一组多维度数值，并检验这组数据正不正确
+  if (solution[] is well-generated){
+    check and record solution;
+    return;
+  }
+  //穷举这个维度的所有数值，并巡回到下一个维度
+  for ( x = each value of current dimension ){
+    solution[dimension] = x;
+    backtrack( dimension + 1);
+  }
+}
+int main() {
+  backtrack(0); // 从第一个维度开始逐步枚举
+}
+
+当所需的多维度数值只有唯一一组时，可以让程式提早结束
+
+int solution[MAX_DIMENSION];
+bool finished = false;
+void backtrack(int dimension) {
+  if (solution[] is well generated) {
+    check and record solution;
+    if (solution is found) finished = true; //找到数据了
+    return;
+  }
+  for (x = each value of current dimension) {
+    solution[dimension] = x;
+    backtrack(dimension+1);
+    if (finished) return; //提早结束，跳出巡回
+  }
+}
