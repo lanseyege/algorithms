@@ -1,0 +1,28 @@
+Inclusion-Extension Principle : 排容原理
+ A ^ B ^ C = A + B + C - A & B - B & C - C & A + A & B & C
+ 举例：求出1到100当中不可被3或5或8整除的整数有几个，3，5，8互质。
+ 100 - (100/3+100/5+100/8 - 100/3/5 - 100/5/8 - 100/3/8 + 100/3/5/8)
+ = 100/1 - 100/3 -100/5 -100/8+100/3/5 + 100/5/8 +100/3/8 -100/3/5/8
+ 
+ int array[3]={3,5,8};
+ int backtrack(int n, int sign, int divisor) {
+ 	if (n==3)
+ 		return sign*(100/divisor);
+ 	int total=0;
+ 	total += backtrack(n+1,sign,divisor);//不选，符号不变，除数维持不变
+ 	total += backtrack(n+1,-sign,divisor*array[n]);//选，需变号，并逐步累积除数
+ 	return total;
+ }
+ 
+ 若array不互质，则
+ int array[5] = {3,5,6,7,9};
+ int gcd(int a, int b) {
+ 	return b ? gcd(b , a%b) : a;
+ }
+ int lcm(int a, int b) {
+ 	return a / gcd(a, b) * b;
+ }
+ int backtrack(int n) {
+ 	if ( n==5) return 100/divisor;
+ 	return backtrack(n+1, divisor) - backtrack(n+1, lcm(divisor,array[n]));
+ }
