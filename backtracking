@@ -48,3 +48,197 @@ void backtrack(int dimension) {
     if (finished) return; //提早结束，跳出巡回
   }
 }
+回溯法的特色是随时避免枚举不正确的数值。一旦发现不正确的数值，就不巡回至下一层，而是回溯至上一层，节省时间。
+另外，还可以调整维度先后顺序、一个维度之中枚举值的顺序。如果安排得意，可以更快找到正确的多维度数值。
+
+int select[5];
+void backtrack(int n){ // n为现在正在枚举的维度
+  // it  is a solution
+  if(n==5){
+    for(int i=0;i<5;i++)
+      cout<<select[i]<<' ';
+    cout<<endl;
+    return;
+  }
+  // 逐步枚举数字1到10， 并且巡回下去，继续枚举之后的维度
+  for(int i=1; i<=10; i++){
+    select[n]=i;
+    backtrack(n+1);
+  }
+}
+
+综合其他技巧， 剪支(pruning)、制作分支(branch)、界限(bound)
+剪支：
+int solution[max_DIMENSION];
+void backtrack(int dimension){
+  //pruning, 在巡回途中避免枚举出不正确的数据
+  if (solution[] will not be a solution in the future)
+    return;
+  if (solution[] is well-generated  ) {
+    check and record solution;
+    return;
+  }
+  for (x = each value of current dimension ) {
+    solution[dimension] = x;
+    backtrack(dimension + 1);
+  }
+}
+branch：
+int solution[MAX_DIMENSION];
+void backtrack(int dimension) {
+  if (solution[] is well-generated ) {
+    check and record solution;
+    return;
+  }
+  //branch : 制作适当的分支
+  int c[MAX_CANDIDATE]; // candidates for next dimension
+  int ncandidate; // candidate counter
+  construct_candidates(dimension, c, ncandidate);
+  for (int i=0; i<ncandidate; i++) {
+    solution[dimension] = c[i];
+    backtrack(dimension+1);
+  }
+}
+bound:
+int solution[MAX_DIMENSION];
+void backtrack(int dimension, int cost) {//用一数值代表数据好坏
+  //bound: 数据太糟了，不可能成为正确数据，不必巡回下去
+  if (cost is worse than best_cost) return;
+  //bound: 数据够好了，可以成为正确数据， 不必巡回下去
+  if (solution[] is well-generated){
+    check and record solution;
+    if (solution is found) 
+      best_cost = cost;//记录cost
+    return;
+  }
+  for (x = each value of current dimension) {
+    solution[dimension] = x;
+    backtrack(dimension+1, cost+(cost of x));
+  }
+}
+
+Enumerate Permutation
+排列，比如{1,2,3}的所有排列是。。。
+范例，枚举{0,1,2,3,4}所有排列
+
+int solution[5];
+bool used[5];
+void backtrack(int n) {
+    if (n==5) {
+        for (int i=0; i<5; i++){
+            cout<<solution[i]<<' ';
+        }cout<<endl;
+    }
+    for (int i=0; i<5; i++) {
+        if (!used[i]) {
+            solution[n] = i; //第n格填入数字i ， 或者 solution[i]=n;将数字n填入各个格子
+            used[i] = true;
+            backtrack(n+1);
+            used[i]=false;
+        } 
+    }
+}
+
+范例：枚举 {a,b,b}的排列
+由于有重复元素，所以常规方法不可取，这里有两种方法
+1、将字符数组按字典循序排序，使用 char last_char 记录上个使用的字符
+2、使用散列表的概念来做，无需排序
+第一种方法：
+char s[3]={'b','a','b'};
+char solution[3];
+bool used[3];
+
+void backtrack(int n, int N) {
+    if (n==N){
+        for (int i=0; i<N; i++)
+            cout << solution[i] <<' ';
+        cout <<endl;
+    }
+    char last = '\0';
+    for (int i=0; i<3; i++) {
+        if (used[i]) continue;
+        if (s[i] == last) continue;
+        last = s[i];    
+        used[i]=true;   
+        solution[n] = s[i];
+        backtrack(n+1, N);
+        used[i]=false;  
+    }
+}
+第二种方法：
+char s[3]={'b','a','b'};
+char solution[3];
+int array[128];
+
+void backtrack(int n, int N){
+    if(n==N){
+        for(int i=0;i<N;i++)
+            cout<<solution[i];
+        cout<<endl;
+        return;
+    }
+    for(int i=0; i<128; i++){
+        if(array[i]>0){
+            array[i]--;
+            solution[n]=i;
+            backtrack(n+1,N);
+            array[i]++;
+        }
+    }
+}
+
+Enumerate Combinations
+组合，n个元素，组合有2^n - 1个
+1、索引存储
+bool solution[5];
+void backtrack(int n) {
+    if (n==5) {
+        for (int i=0; i<5; i++)
+            if (solution[i])
+                cout << i <<' ';
+            cout<<endl;
+        return;
+    }
+    solution[n]=true;
+    backtrack(n+1);
+    solution[n]=false;
+    backtrack(n+1);
+}
+2、循序存储
+int subset[5];
+void backtrack(int n, int size) {
+    if (n==5) {
+        for (int i=0; i<size; i++) {
+            cout << subset[i]<<' ';
+        }
+        cout <<endl;
+        return;
+    }
+    subset[size]=n;
+    backtrack(n+1, size+1);
+    backtrack(n+1, size);
+}
+3、依序枚举每个选举。针对每个选取，试着填入各个位置。
+bool solution[5];
+void backtrack(int n) {
+    for (int i=0; i<5; i++)
+        if (solution[i])
+            cout<<i<<' ';
+    cout<<endl;
+    for (; n<5;n++) {
+        solution[n]=true;
+        backtrack(n+1);
+        solution[n]=false;
+    }
+}
+4、
+int subset[5];
+void backtrack(int n, int size) {
+    for (int i=0; i<size; i++) 
+        cout<<subset[i]<<' ';
+    cout<<endl;
+    for (; n<5; n++) {
+        subset[size]=n;
+        backtrack(n+1, size+1);
+    }
+}
