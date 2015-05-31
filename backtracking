@@ -189,6 +189,8 @@ void backtrack(int n, int N){
 
 Enumerate Combinations
 组合，n个元素，组合有2^n - 1个
+一、依次枚举每个位置。针对每个位置，试着填入取或不取（1、2）
+二、依次枚举每个选取。针对每个选取，试着填入各个位置（3、4）
 1、索引存储
 bool solution[5];
 void backtrack(int n) {
@@ -199,14 +201,16 @@ void backtrack(int n) {
             cout<<endl;
         return;
     }
+    //选取数字n，然后继续枚举之后的位置
     solution[n]=true;
     backtrack(n+1);
+    //不选取数字n，然后继续枚举之后的位置
     solution[n]=false;
     backtrack(n+1);
 }
 2、循序存储
 int subset[5];
-void backtrack(int n, int size) {
+void backtrack(int n, int size) { //size为子集和大小
     if (n==5) {
         for (int i=0; i<size; i++) {
             cout << subset[i]<<' ';
@@ -214,8 +218,10 @@ void backtrack(int n, int size) {
         cout <<endl;
         return;
     }
+    //选取数字n，然后继续枚举剩下的数字
     subset[size]=n;
     backtrack(n+1, size+1);
+    //不取数字n，然后继续枚举剩下的数字
     backtrack(n+1, size);
 }
 3、依序枚举每个选举。针对每个选取，试着填入各个位置。
