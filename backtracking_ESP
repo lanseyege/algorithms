@@ -1,0 +1,38 @@
+Euclidean Shortest Path(最短欧几里德距离)
+
+struct point {double x, y;} p[10];
+bool connect[10][10];
+int s = 0, t = 9;
+int solution[10];
+bool used[10];
+int best_solution[10];
+int best_dist;
+double length(Point& a, Point& b) {
+	double dx = b.x - a.x, dy = b.y - a.y;
+	return sqrt(dx * dx + dy * dy);
+}
+void backtrack(int n, int a, int dist) {
+	
+	if (a == t) {
+    	if (dist < best_dist) {
+    		best_dist = dist;
+    		for (int i=0; i<n; i++)
+    			best_solution[i] = solution[i];
+    	}
+    	return;
+  	}
+  	for (int b=0; b<10; b++) 
+  	  if (connect[a][b]) // pruning , 有路才通行
+  		if (!used[b]) {
+  			used[b] = true;
+  			solution[n] = b;
+  			backtrack(n+1, b, dist+length(p[a],p[b]));
+  			used[b] = false;
+  		}
+}
+void euclidean_shortest_path() {
+	best_dist = 1e9;
+	used[s] = true;
+	solution[0] = s;
+	backtrackk(0+1, 0, 0);
+}
