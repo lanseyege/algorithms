@@ -1,0 +1,47 @@
+一个非常简单的想法，每格都有放和不放两种选择，枚举
+所有的可能，并避免枚举出皇后相互攻击的情形。建立
+8×8的bool阵列，代表一个8×8的棋盘盘面情况。例如
+solution[0][0]=true表示(0,0)这个位置有放置皇后。
+
+bool solution[8][8];
+bool mx[8], my[8], md1[15], md2[15];
+void backtrack(int x, int y, int c) {
+	if (y == 8)
+		x++, y=0; //换到下一个棋子
+	if (x == 8) { // a solution
+		if (c !=8) return; 
+		print_solution();
+		return;
+	}
+	int d1 = (x+y) % 15;
+	int d2 = (x-y+15) % 15;
+	if (!mx[x] && !my[y] && !md1[d1] && !md2[d2]) {
+		mx[x] = my[y] = md1[d1] =md2[d2] = true;
+		solution[x][y]=true; //放皇后
+		backtrack(x, y+1);
+		mx[x] = my[y] = md1[d1] = md2[d2];
+	}
+	solution[x][y]=false; //不放皇后
+	backtrack(x,y+1);
+}
+改进：由于一条线必须刚好能放一个皇后，故可以以线为单位来巡回穷举。
+重新建立一个一维阵列，solution[0]=5表示第0个直行上的皇后在第五个位置
+
+int solution[8];
+bool mx[8], md1[15], md2[15];
+void backtrack(int x) {
+	if (x==8) {
+		print_solution();
+		return;
+	}
+	
+	int d1 = (x+y) % 15, d2 = (x-y + 15) % 15;
+	for (int y=0; y<8; y++) {
+		if (!my[y] && !md1[d1] && !md2[d2]) {
+			my[y] = md1[d1] = md2[d2] = true;
+			solution[x] = y;
+			backtrack(x+1);
+			my[y] = md1[d1] = md2[d2] = false;
+		}
+	}
+}
